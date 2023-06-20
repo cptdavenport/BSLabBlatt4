@@ -22,6 +22,13 @@ void* miner(void* arg) {
     int miner_id = *(int *) arg;
 
     while (1) {
+        pthread_mutex_lock(&dragon_mutex);
+        while (dragon_is_awake) {
+            printf("Miner %d waits for the dragon to sleep.\n", miner_id);
+            pthread_cond_wait(&dragon_sleeps_cond, &dragon_mutex);
+        }
+        pthread_mutex_unlock(&dragon_mutex);
+        
         pthread_mutex_lock(&mine_mutex);
         if (dragon_is_awake) {
             printf("Miner %d got eaten.\n", miner_id);
