@@ -10,6 +10,7 @@
 #define MAX_CARRY 20
 #define MAX_WORK 3
 #define MAX_REST 2
+#define MIN_REST 1
 
 int32_t gems_in_mine = MINE_CAPACITY;
 bool dragon_is_awake = false;
@@ -48,7 +49,7 @@ void* miner(void* arg) {
         }
         pthread_mutex_unlock(&mine_mutex);
 
-        sleep(rand() % MAX_REST);  // Resting
+        sleep(rand() % (MAX_REST - MIN_REST + 1) + MIN_REST);  // Resting with minimum rest time
     }
 }
 
