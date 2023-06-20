@@ -12,6 +12,7 @@
 #define MAX_REST 2
 #define MIN_REST 1
 
+
 int32_t gems_in_mine = MINE_CAPACITY;
 bool dragon_is_awake = false;
 
@@ -24,12 +25,13 @@ void* miner(void* arg) {
 
     while (1) {
         pthread_mutex_lock(&dragon_mutex);
-        while (dragon_is_awake) {
-            printf("Miner %d waits for the dragon to sleep.\n", miner_id);
-            pthread_cond_wait(&dragon_sleeps_cond, &dragon_mutex);
+        while(dragon_is_awake){
+            printf("Miner %d waits for big bad drake to go to bed.\n", miner_id);
+            pthread_cond_wait(&dragon_sleeps_cond,&dragon_mutex);
+
         }
         pthread_mutex_unlock(&dragon_mutex);
-        
+
         pthread_mutex_lock(&mine_mutex);
         if (dragon_is_awake) {
             printf("Miner %d got eaten.\n", miner_id);
@@ -49,7 +51,7 @@ void* miner(void* arg) {
         }
         pthread_mutex_unlock(&mine_mutex);
 
-        sleep(rand() % (MAX_REST - MIN_REST + 1) + MIN_REST);  // Resting with minimum rest time
+        sleep(rand() % MAX_REST+MIN_REST);  // Resting
     }
 }
 
